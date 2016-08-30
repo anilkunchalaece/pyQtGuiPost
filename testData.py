@@ -5,6 +5,9 @@
 import urllib2, urllib #used tos end post Request
 import re #used to parse the Received Data
 
+
+#Date : 30 Aug 2016 - Avoid the' \n\r' characters in received string
+#http://stackoverflow.com/questions/1185524/how-to-trim-whitespace-including-tabs
 class TestData(object):
     def __init__(self):
         #f = open('anatomy_questions.csv','rt')
@@ -18,7 +21,7 @@ class TestData(object):
         self.keyDict = {}
         self.key = 1;
                 
-        self.mydata=[('ID',102),('two',2)]    #The first is the var name the second is the value
+        self.mydata=[('ID',104),('two',2)]    #The first is the var name the second is the value
         self.mydata=urllib.urlencode(self.mydata)
         self.path='http://www.newpythonscripts.16mb.com/new5.php'    #the url you want to POST to
         self.req=urllib2.Request(self.path, self.mydata)
@@ -42,7 +45,7 @@ Original Question
 
         self.cutQue = r"(\d+?)\|\|(.+?)\|\|(.+?)\|\|(.+?)\|\|(.+?)\|\|(.+?)$" #re pattern used to Each question in list into Question and Options
 
-        for queOpt in re.findall(self.getQue,self.page):
+        for queOpt in re.findall(self.getQue,self.page.translate(None,' \n\r\t')):
             for opt in re.findall(self.cutQue,queOpt):
                 self.keys.append(self.key)
                 self.keyDict[str(self.key)] = opt[0]
