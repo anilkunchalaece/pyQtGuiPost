@@ -20,6 +20,9 @@ class TestData(object):
         self.optDDict = {}
         self.keyDict = {}
         self.key = 1;
+        #imgDict and imDict uses the Normal Keywords Not Uid of Questons as Key Values
+        self.imgUrlDict = {}
+        self.imgQueDict = {}
                 
         self.mydata=[('ID',104),('two',2)]    #The first is the var name the second is the value
         self.mydata=urllib.urlencode(self.mydata)
@@ -45,11 +48,26 @@ Original Question
 
         self.cutQue = r"(\d+?)\|\|(.+?)\|\|(.+?)\|\|(.+?)\|\|(.+?)\|\|(.+?)$" #re pattern used to Each question in list into Question and Options
 
-        for queOpt in re.findall(self.getQue,self.page.translate(None,' \n\r\t')):
+        self.getImgUrl = r"src\=\"(.+?)\"" #re pattern used to check whether Question has Img Url and Parse the Url
+
+        self.getImgQue = r"\>(.+?)$" #re pattern to parse question along with Question
+
+        for queOpt in re.findall(self.getQue,self.page.translate(None,'\n\r\t')):
             for opt in re.findall(self.cutQue,queOpt):
                 self.keys.append(self.key)
                 self.keyDict[str(self.key)] = opt[0]
+
                 self.queDict[str(self.key)] = opt[1]
+                #check whether we received the Img in Question..
+                self.qImg = re.findall(self.getImgUrl,opt[1])
+                if self.qImg :
+                    #If we received the Image in the Question.. we Fill the imgUrlDict andimgQueDict with Img Url and Img Question
+                    #w replace the keyword as a Value in queDict to alert we got Image
+                    self.imgUrlDict[str(self.key)] = self.qImg[0]
+                    self.imgQueDict[str(self.key)] = re.findall(self.getImgQue,self.qImg[0])
+                    self.queDict[str(self.key)] = self.key
+
+                
                 self.optADict[str(self.key)] = opt[2]
                 self.optBDict[str(self.key)] = opt[3]
                 self.optCDict[str(self.key)] = opt[4]
