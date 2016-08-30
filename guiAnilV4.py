@@ -4,7 +4,7 @@
 
 #Check the Automatic Button Genration Clearly - Ref guiAnilV3.py
 
-#Import the Layout
+#Import the Layout from orgLayout Class File
 from orgLayout import Ui_prepare2Pg
 #import csv for TestData
 import csv
